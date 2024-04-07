@@ -4,7 +4,7 @@ import { Message } from "./messages";
 import { AppConfig } from "./config";
 import { ConfigError } from "effect/ConfigError";
 
-class UnavailableError extends Data.TaggedError("Unavailable")<{
+export class UnavailableError extends Data.TaggedError("Unavailable")<{
   message: string;
 }> {}
 

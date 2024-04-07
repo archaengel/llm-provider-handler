@@ -1,4 +1,4 @@
-import { Data, Effect, Console, Stream, Schedule } from "effect";
+import { Data, Effect, Stream, Schedule } from "effect";
 import * as Http from "@effect/platform/HttpServer";
 import { OpenAiChat, OpenAiLive } from "../chatService";
 
@@ -13,7 +13,7 @@ class TimeoutError extends Data.TaggedError("Timeout")<{
   message: string;
 }> {}
 
-const program = Effect.gen(function* (_) {
+export const program = Effect.gen(function* (_) {
   const { completions } = yield* _(OpenAiChat);
 
   const messages = yield* _(
@@ -28,10 +28,6 @@ const program = Effect.gen(function* (_) {
         new TimeoutError({ message: "Timed out waiting for Open AI" }),
     }),
   );
-
-  for (const message of messages) {
-    yield* _(Console.log(message));
-  }
 
   const res = yield* _(
     Stream.fromIterable(messages),
