@@ -1,6 +1,6 @@
 import { Data, Effect, Stream, Schedule } from "effect";
 import * as Http from "@effect/platform/HttpServer";
-import { OpenAiChat, OpenAiLive } from "../chatService";
+import { OpenAiChat, OpenAiLive } from "./openAiService";
 
 export const dynamic = "force-dynamic";
 

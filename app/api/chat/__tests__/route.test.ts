@@ -1,17 +1,7 @@
-import {
-  Chunk,
-  Context,
-  Effect,
-  Either,
-  Layer,
-  Option,
-  Stream,
-  pipe,
-} from "effect";
-import { OpenAiChat, UnavailableError } from "../../chatService";
-import { Message } from "../../messages";
+import { Context, Effect, Either, Layer, Option, pipe } from "effect";
+import { OpenAiChat, UnavailableError } from "../openAiService";
+import { Message } from "../messages";
 import { program } from "../route";
-import { fromReadableStream } from "effect/Stream";
 
 type FailureCaseLiterals = "Unavailable" | undefined;
 
