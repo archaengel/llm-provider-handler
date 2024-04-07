@@ -1,7 +1,7 @@
 import { Data, Effect, Stream, Schedule, Layer } from "effect";
 import * as Http from "@effect/platform/HttpServer";
-import { OpenAiChat, OpenAiLive } from "./openAiService";
-import { AnthropicChat, AnthropicChatLive } from "./anthropicService";
+import { OpenAiChat, OpenAiLive } from "./providers/openAiService";
+import { AnthropicChat, AnthropicChatLive } from "./providers/anthropicService";
 import { Message } from "./messages";
 
 export const dynamic = "force-dynamic";

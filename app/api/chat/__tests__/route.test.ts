@@ -9,10 +9,10 @@ import {
   TestContext,
   pipe,
 } from "effect";
-import { OpenAiChat, UnavailableError } from "../openAiService";
+import { OpenAiChat, UnavailableError } from "../providers/openAiService";
 import { Message } from "../messages";
 import { program } from "../route";
-import { AnthropicChat as AnthropicChat } from "../anthropicService";
+import { AnthropicChat as AnthropicChat } from "../providers/anthropicService";
 
 type FailureCaseLiterals = "Unavailable" | undefined;
 

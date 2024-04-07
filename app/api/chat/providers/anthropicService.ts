@@ -1,7 +1,7 @@
 import { Effect, Console, Context, Data, Layer, Stream, Option } from "effect";
 import * as Http from "@effect/platform/HttpClient";
-import { Message } from "./messages";
-import { AppConfig } from "./config";
+import { Message } from "../messages";
+import { AppConfig } from "../config";
 import { ConfigError } from "effect/ConfigError";
 
 export class UnavailableError extends Data.TaggedError("Unavailable")<{
