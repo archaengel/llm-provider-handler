@@ -1,11 +1,18 @@
-import { Data, Effect, Stream, Schedule } from "effect";
+import { Data, Effect, Stream, Schedule, Layer } from "effect";
 import * as Http from "@effect/platform/HttpServer";
 import { OpenAiChat, OpenAiLive } from "./openAiService";
+import { AnthropicChat, AnthropicChatLive } from "./anthropicService";
+import { Message } from "./messages";
 
 export const dynamic = "force-dynamic";
 
+const HandlerLayer = Layer.mergeAll(OpenAiLive, AnthropicChatLive);
+
 export async function GET(request: Request) {
-  const res = await program.pipe(Effect.provide(OpenAiLive), Effect.runPromise);
+  const res = await program.pipe(
+    Effect.provide(HandlerLayer),
+    Effect.runPromise,
+  );
   return res;
 }
 
@@ -15,18 +22,31 @@ class TimeoutError extends Data.TaggedError("Timeout")<{
 
 export const program = Effect.gen(function* (_) {
   const { completions } = yield* _(OpenAiChat);
+  const { completions: antCompletions } = yield* _(AnthropicChat);
+
+  const input: Message[] = [
+    { role: "system", content: "You are a friendly assistant." },
+    { role: "user", content: "Hello!" },
+  ];
 
   const messages = yield* _(
-    completions([
-      { role: "system" as const, content: "You are a friendly assistant." },
-      { role: "user" as const, content: "Hello!" },
-    ]),
+    completions(input),
     Effect.retry(Schedule.exponential("10 millis")),
     Effect.timeoutFail({
-      duration: "1 seconds",
+      duration: "4 seconds",
       onTimeout: () =>
         new TimeoutError({ message: "Timed out waiting for Open AI" }),
     }),
+    Effect.orElse(() =>
+      antCompletions(input).pipe(
+        Effect.retry(Schedule.exponential("10 millis")),
+        Effect.timeoutFail({
+          duration: "4 seconds",
+          onTimeout: () =>
+            new TimeoutError({ message: "Timed out waiting for Anthropic" }),
+        }),
+      ),
+    ),
   );
 
   const res = yield* _(
