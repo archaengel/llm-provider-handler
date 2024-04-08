@@ -38,6 +38,7 @@ const completions = (messages: Array<Message>) =>
         }),
         Http.request.setBody(body),
         Http.client.fetch(),
+        Effect.tap(Effect.log("Attempting to decode stream")),
         Effect.map((res) => res.stream),
         Effect.map(Stream.decodeText("utf-8")),
         Effect.map(Stream.splitLines),
@@ -54,6 +55,7 @@ const completions = (messages: Array<Message>) =>
     return stream;
   }).pipe(
     Effect.scoped,
+    Effect.tapError(Effect.logError),
     Effect.catchTags({
       BodyError: () =>
         new UnavailableError({
@@ -68,6 +70,7 @@ const completions = (messages: Array<Message>) =>
           message: `Unexpected error occurred hitting ${methodAndUrl}: ${message}`,
         }),
     }),
+    Effect.withSpan("OpenAI Chat"),
   );
 
 export const OpenAiLive = Layer.succeed(

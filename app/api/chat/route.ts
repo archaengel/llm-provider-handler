@@ -3,10 +3,11 @@ import * as Http from "@effect/platform/HttpServer";
 import { OpenAiChat, OpenAiLive } from "./providers/openAiService";
 import { AnthropicChat, AnthropicChatLive } from "./providers/anthropicService";
 import { Message } from "./messages";
+import { NodeSdkLive } from "../otel";
 
 export const dynamic = "force-dynamic";
 
-const HandlerLayer = Layer.mergeAll(OpenAiLive, AnthropicChatLive);
+const HandlerLayer = Layer.mergeAll(OpenAiLive, AnthropicChatLive, NodeSdkLive);
 
 export async function GET() {
   const res = await program.pipe(
@@ -47,6 +48,7 @@ export const program = Effect.gen(function* (_) {
         }),
       ),
     ),
+    Effect.withSpan("completions"),
   );
 
   const res = yield* _(
