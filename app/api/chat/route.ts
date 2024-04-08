@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 
 const HandlerLayer = Layer.mergeAll(OpenAiLive, AnthropicChatLive);
 
-export async function GET(request: Request) {
+export async function GET() {
   const res = await program.pipe(
     Effect.provide(HandlerLayer),
     Effect.runPromise,
