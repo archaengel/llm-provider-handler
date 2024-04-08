@@ -39,7 +39,7 @@ const completions = (messages: Array<Message>) =>
         Http.request.setBody(body),
         Http.client.fetch(),
         Effect.map((res) => res.stream),
-        Effect.map(Stream.map((buf) => new TextDecoder().decode(buf))),
+        Effect.map(Stream.decodeText("utf-8")),
         Effect.flatMap((stream) =>
           Stream.runFold([], (acc: string[], msg: string) => [...acc, msg])(
             stream,

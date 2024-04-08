@@ -51,7 +51,7 @@ export const program = Effect.gen(function* (_) {
 
   const res = yield* _(
     Stream.fromIterable(messages),
-    Stream.map((msg) => new TextEncoder().encode(msg)),
+    Stream.encodeText,
     Http.response.stream,
     Effect.map((res) => Http.response.toWeb(res)),
   );
