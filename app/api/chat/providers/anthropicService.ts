@@ -1,4 +1,4 @@
-import { Effect, Console, Context, Data, Layer, Stream, Option } from "effect";
+import { Effect, Context, Data, Layer, Stream, Option } from "effect";
 import * as Http from "@effect/platform/HttpClient";
 import { Message } from "../messages";
 import { AppConfig } from "../config";
