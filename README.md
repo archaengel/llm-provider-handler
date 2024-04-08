@@ -56,3 +56,10 @@ curl -v localhost:3000/api/chat
 ```sh
 pnpm test
 ```
+
+## Deploy
+To deploy the function, run
+
+```sh
+vercel --env OPEN_AI_TOKEN=<OPEN_AI_TOKEN> --env ANTHROPIC__TOKEN=<ANTHROPIC_TOKEN>
+```

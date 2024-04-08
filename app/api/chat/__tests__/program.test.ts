@@ -11,7 +11,7 @@ import {
 } from "effect";
 import { OpenAiChat, UnavailableError } from "../providers/openAiService";
 import { Message } from "../messages";
-import { program } from "../route";
+import { program } from "../program";
 import { AnthropicChat as AnthropicChat } from "../providers/anthropicService";
 
 type FailureCaseLiterals = "Unavailable" | undefined;
@@ -71,7 +71,7 @@ const AnthropicTest = Layer.effect(
 const TestLayer = Layer.mergeAll(OpenAiTest, AnthropicTest);
 
 describe("route", () => {
-  it("times out when both providers are down", async () => {
+  it("returns a 500 when both providers are down", async () => {
     await Effect.gen(function* (_) {
       const f = yield* _(
         program.pipe(
@@ -87,9 +87,10 @@ describe("route", () => {
 
       const result = yield* _(Fiber.join(f));
 
-      expect(Either.isLeft(result)).toBeTruthy();
-      const left = pipe(result, Either.getLeft, Option.getOrNull);
-      expect(left?._tag).toBe("Timeout");
+      expect(Either.isRight(result)).toBeTruthy();
+      const right = pipe(result, Either.getOrThrow);
+      expect(right).toBeTruthy();
+      expect(right.status).toBe(500);
     }).pipe(Effect.provide(TestContext.TestContext), Effect.runPromise);
   });
 
