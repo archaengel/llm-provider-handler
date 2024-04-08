@@ -40,6 +40,9 @@ const completions = (messages: Array<Message>) =>
         Http.client.fetch(),
         Effect.map((res) => res.stream),
         Effect.map(Stream.decodeText("utf-8")),
+        Effect.map(Stream.splitLines),
+        Effect.map(Stream.filter((str) => str.length > 0)),
+        Effect.map(Stream.intersperse("\r\n")),
         Effect.flatMap((stream) =>
           Stream.runFold([], (acc: string[], msg: string) => [...acc, msg])(
             stream,
