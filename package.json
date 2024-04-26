@@ -1,5 +1,5 @@
 {
-  "name": "markprompt-handler",
+  "name": "llm-provider-handler",
   "version": "0.1.0",
   "private": true,
   "scripts": {
